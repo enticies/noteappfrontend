@@ -1,0 +1,100 @@
+* {
+  margin: 0;
+  padding: 0;
+  font-family: 'Noto Sans', sans-serif;
+}
+
+.login {
+  background-color: #EB5160;
+  position: absolute;
+  width: 400px;
+  height: 500px;
+  top: 10%;
+  left: 50%;
+  border-radius: 6px;
+  -webkit-transform: translateX(-50%);
+          transform: translateX(-50%);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.login form {
+  height: -webkit-max-content;
+  height: -moz-max-content;
+  height: max-content;
+  width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.login form input,
+.login form button {
+  border-radius: 6px;
+  border: none;
+  background-color: transparent;
+  width: 80%;
+  font-size: 17px;
+  color: white;
+  outline: none;
+  border: 1px solid white;
+  margin-top: 10px;
+}
+
+.login form input::-webkit-input-placeholder,
+.login form button::-webkit-input-placeholder {
+  color: white;
+}
+
+.login form input:-ms-input-placeholder,
+.login form button:-ms-input-placeholder {
+  color: white;
+}
+
+.login form input::-ms-input-placeholder,
+.login form button::-ms-input-placeholder {
+  color: white;
+}
+
+.login form input::placeholder,
+.login form button::placeholder {
+  color: white;
+}
+
+.login form input {
+  text-indent: 6%;
+  padding: 10px 0;
+}
+
+.login form input:focus::-webkit-input-placeholder {
+  color: transparent;
+}
+
+.login form input:focus:-ms-input-placeholder {
+  color: transparent;
+}
+
+.login form input:focus::-ms-input-placeholder {
+  color: transparent;
+}
+
+.login form input:focus::placeholder {
+  color: transparent;
+}
+
+.login form button {
+  width: 30%;
+  text-align: center;
+  padding: 10px 0;
+  cursor: pointer;
+}
+/*# sourceMappingURL=login.css.map */
