@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from "react-router-dom";
-import "./Assets/Styles/access.css";
+import "../Assets/Styles/access.css";
 
 export default function Signup() {
     const [inputs, setInputs] = useState({});

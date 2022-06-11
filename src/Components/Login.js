@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import "./Assets/Styles/access.css";
+import "../Assets/Styles/access.css";
 import { Link } from "react-router-dom";
+import { Redirect } from 'react-router-dom';
+import Main from "./Main";
 
 export default function Login() {
     const [inputs, setInputs] = useState({});
@@ -30,7 +32,6 @@ export default function Login() {
         const user = users.find((user) => user.username === inputs.username);
         if (user === undefined) {
             document.getElementsByClassName("error-output")[0].textContent = `Username "${inputs.username}" doesn't exist!`;
-            console.log("here");
             return;
         }
         if (user !== undefined && user.password !== inputs.password) {
@@ -38,8 +39,7 @@ export default function Login() {
             return;
         }
 
-        console.log("Success");
-
+        this.props.router.push("/");
     }
 
     return (
