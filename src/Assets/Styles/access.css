@@ -10,6 +10,11 @@
   font-weight: bold;
 }
 
+body {
+  width: 100%;
+  height: 100%;
+}
+
 .login, .signup {
   background-color: #EB5160;
   position: absolute;

@@ -1,0 +1,32 @@
+.error404 {
+  width: 100%;
+  height: 1000px;
+  text-align: center;
+}
+
+.error404 a,
+.error404 a:visited,
+.error404 a:hover,
+.error404 a:active {
+  color: inherit;
+  text-decoration: none;
+}
+
+.error404 .number {
+  font-size: 13rem;
+  margin-top: 5rem;
+}
+
+.error404 .text {
+  font-size: 2rem;
+}
+
+.error404 .question {
+  margin-top: 3rem;
+}
+
+.error404 .question span {
+  color: #EB5160;
+  font-weight: bolder;
+}
+/*# sourceMappingURL=error404.css.map */

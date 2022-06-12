@@ -1,11 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import "../Assets/Styles/access.css";
-import { Link } from "react-router-dom";
-import { Redirect } from 'react-router-dom';
+import { Link, useNavigate } from "react-router-dom";
 import Main from "./Main";
 
 export default function Login() {
     const [inputs, setInputs] = useState({});
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        document.body.style.backgroundColor = "#343434";
+        document.body.style = "initial";
+
+        return () => {
+            document.body.style.backgroundColor = "white";
+        };
+    }, []);
 
     const handleChange = (e) => {
         const name = e.target.name;
@@ -39,7 +48,8 @@ export default function Login() {
             return;
         }
 
-        this.props.router.push("/");
+        navigate('/main');
+
     }
 
     return (
