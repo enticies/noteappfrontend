@@ -7,15 +7,6 @@ export default function Login() {
     const [inputs, setInputs] = useState({});
     const navigate = useNavigate();
 
-    useEffect(() => {
-        document.body.style.backgroundColor = "#343434";
-        document.body.style = "initial";
-
-        return () => {
-            document.body.style.backgroundColor = "white";
-        };
-    }, []);
-
     const handleChange = (e) => {
         const name = e.target.name;
         const value = e.target.value;
@@ -48,6 +39,7 @@ export default function Login() {
             return;
         }
 
+        localStorage.setItem("currentUser", inputs.username);
         navigate('/main');
 
     }

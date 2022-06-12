@@ -1,3 +1,5 @@
+$base-color: #EB5160;
+
 * {
     margin: 0;
     padding: 0;
@@ -16,7 +18,7 @@ body {
 }
 
 .login, .signup {
-    background-color: #EB5160;
+    background-color: $base-color;
     position: absolute;
     width: 400px;
     height: 500px;

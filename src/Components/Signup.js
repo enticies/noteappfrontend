@@ -39,6 +39,7 @@ export default function Signup() {
         users.push({
             username: inputs.username,
             password: inputs.password,
+            notes: {}
         });
         localStorage.setItem("users", JSON.stringify(users));
     }
