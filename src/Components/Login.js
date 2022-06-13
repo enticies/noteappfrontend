@@ -7,6 +7,7 @@ export default function Login() {
     const [inputs, setInputs] = useState({});
     const navigate = useNavigate();
 
+
     const handleChange = (e) => {
         const name = e.target.name;
         const value = e.target.value;
@@ -39,8 +40,8 @@ export default function Login() {
             return;
         }
 
-        localStorage.setItem("currentUser", inputs.username);
-        navigate('/main');
+        localStorage.setItem("isAuthenticated", true);
+        navigate('/login', { state :{username: null}, replace: false })
 
     }
 
