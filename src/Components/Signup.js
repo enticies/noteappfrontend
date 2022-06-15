@@ -51,7 +51,9 @@ export default function Signup() {
             password: inputs.password,
             notes: {}
         });
-        localStorage.setItem("users", JSON.stringify(users));
+        localStorage.setItem('users', JSON.stringify(users));
+        localStorage.setItem('currentUser', inputs.username);
+        navigate('/');
     }
 
     return (
