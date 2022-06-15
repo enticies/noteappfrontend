@@ -6,31 +6,39 @@ import Main from "./Main";
 export default function Login() {
     const [inputs, setInputs] = useState({});
     const navigate = useNavigate();
+    if (!localStorage.getItem("users")) {
+        localStorage.setItem("users", JSON.stringify([]));
+    }
 
+    useEffect(() => {
+        const user = localStorage.getItem('currentUser');
+        const users = JSON.parse(localStorage.getItem('users'));
+
+        if (user && users.find(e => e.username = user)) {
+            navigate('/');
+        }
+    }, [])
 
     const handleChange = (e) => {
         const name = e.target.name;
         const value = e.target.value;
         setInputs(prevState => {
-           return {
-               ...prevState,
-               [name]: value,
-           }
-       })
-       
+            return {
+                ...prevState,
+                [name]: value,
+            }
+        })
+
     }
 
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (!localStorage.getItem("users")) {
-            localStorage.setItem("users", JSON.stringify([]));
-        }
         document.getElementsByClassName("error-output")[0].textContent = "";
 
         const users = JSON.parse(localStorage.getItem("users"));
-
         const user = users.find((user) => user.username === inputs.username);
+
         if (user === undefined) {
             document.getElementsByClassName("error-output")[0].textContent = `Username "${inputs.username}" doesn't exist!`;
             return;
@@ -39,11 +47,11 @@ export default function Login() {
             document.getElementsByClassName("error-output")[0].textContent = "Wrong password!"
             return;
         }
-
-        localStorage.setItem("isAuthenticated", true);
-        navigate('/login', { state :{username: null}, replace: false })
-
+        localStorage.setItem("currentUser", inputs.username);
+        console.log("DSA");
+        navigate('/');
     }
+
 
     return (
         <div className="login">

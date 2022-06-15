@@ -1,9 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../Assets/Styles/access.css";
 
 export default function Signup() {
     const [inputs, setInputs] = useState({});
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const user = localStorage.getItem('currentUser');
+        const users = JSON.parse(localStorage.getItem('users'));
+
+        if (user && users.find(e => e.username = user)) {
+            navigate('/');
+        }
+    })
 
     const handleChange = (e) => {
         const name = e.target.name;

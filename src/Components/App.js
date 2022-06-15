@@ -11,12 +11,12 @@ function App() {
     <Router>
       <div className="App">
         <Routes>
-          <Route path="/" index exact element={<Login />} />
-          <Route element={<ProtectedRoutes />}>
-            <Route path="/signup" exact element={<Signup />} />
-            <Route path="/main" exact element={<Main />} />
-            <Route path="*" exact element={<Error404 />} />
+          <Route  element={<ProtectedRoutes />}>
+            <Route path="/" index exact element={<Main />} />
           </Route>
+          <Route path="/login" exact element={<Login />} />
+          <Route path="/signup" exact element={<Signup />} />
+          <Route path="*" exact element={<Error404 />} />
         </Routes>
       </div>
     </Router>
