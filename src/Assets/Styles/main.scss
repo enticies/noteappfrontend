@@ -12,13 +12,13 @@ $secondary-color: #00A82D;
     width: 100%;
     height: 100vh;
     display: flex;
-    .note-names {
+    .left {
         width: 20%;
         height: 100%;
         background-color: $base-color;
         color: white;
         display: flex;
-        flex-wrap: wrap;
+        flex-direction: column;
 
         .welcome-message {
             font-size: 2rem;
@@ -31,9 +31,23 @@ $secondary-color: #00A82D;
             }
         }
 
+        .new-note {
+            width: 80%;
+            background-color: $secondary-color;
+            border: none;
+            border-radius: 30px;
+            height: max-content;
+            color: white;
+            cursor: pointer;
+            align-self: center;
+            padding: 2% 0;
+            font-size: 1rem;
+            margin-top: 5%;
+        }
+
         .sign-out {
             text-align: center;
-            align-self: flex-end;
+            margin-top: auto;
             width: 100%;
             padding: 3% 0;
             cursor: pointer;
@@ -42,7 +56,7 @@ $secondary-color: #00A82D;
             }
         }
     }
-    .note-bodies {
+    .right {
         width: 80%;
         height: 100%;
     }

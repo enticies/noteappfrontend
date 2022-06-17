@@ -21,11 +21,12 @@ export default function Main() {
     }
     return (
         <main className="main">
-            <div className="note-names">
+            <div className="left">
                 <p className="welcome-message"> Hello <span> {currentUser.username}! </span> </p>
+                <button className="new-note"> <i class="fa-solid fa-plus"></i> New </button>
                 <p className="sign-out" onClick={signOut}> Sign Out </p>
             </div>
-            <div className="note-bodies">
+            <div className="right">
             </div>
         </main>
     )
