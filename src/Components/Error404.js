@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import '../Assets/Styles/error404.css'
 
 // TODO: Make this component more robust by showing more errors. 

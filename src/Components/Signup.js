@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from "react-router-dom";
-import "../Assets/Styles/access.css";
+import { Link, useNavigate } from 'react-router-dom';
+import '../Assets/Styles/access.css';
 
 export default function Signup() {
     const [inputs, setInputs] = useState({});
@@ -10,7 +10,7 @@ export default function Signup() {
         const user = localStorage.getItem('currentUser');
         const users = JSON.parse(localStorage.getItem('users'));
 
-        if (user && users.find(e => e.username = user)) {
+        if (user && users.find(e => e.username === user)) {
             navigate('/');
         }
     })
@@ -28,20 +28,20 @@ export default function Signup() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        document.getElementsByClassName("error-output")[0].textContent = ""
-        if (!localStorage.getItem("users")) {
-            localStorage.setItem("users", JSON.stringify([]));
+        document.getElementsByClassName('error-output')[0].textContent = ""
+        if (!localStorage.getItem('users')) {
+            localStorage.setItem('users', JSON.stringify([]));
         }
 
         if (inputs.password !== inputs.confirmPassword) {
-            document.getElementsByClassName("error-output")[0].textContent = "Passwords do not match."
+            document.getElementsByClassName('error-output')[0].textContent = 'Passwords do not match.'
             return;
         }
 
-        const users = JSON.parse(localStorage.getItem("users"));
+        const users = JSON.parse(localStorage.getItem('users'));
         for (let user of users) {
             if (user.username === inputs.username) {
-                document.getElementsByClassName("error-output")[0].textContent = `Username "${inputs.username}" already exists.`;
+                document.getElementsByClassName('error-output')[0].textContent = `Username '${inputs.username}' already exists.`;
                 return;
             }
         }
@@ -49,7 +49,7 @@ export default function Signup() {
         users.push({
             username: inputs.username,
             password: inputs.password,
-            notes: {}
+            notes: []
         });
         localStorage.setItem('users', JSON.stringify(users));
         localStorage.setItem('currentUser', inputs.username);

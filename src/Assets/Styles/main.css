@@ -60,6 +60,41 @@
   margin-top: 5%;
 }
 
+.main .left .note-names {
+  height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.main .left .note-names .header {
+  text-align: center;
+  padding: 4% 0;
+  font-size: 1.5rem;
+}
+
+.main .left .note-names .names-scroll {
+  height: 100%;
+  width: 100%;
+  -ms-flex-item-align: center;
+      -ms-grid-row-align: center;
+      align-self: center;
+}
+
+.main .left .note-names .names-scroll .noteNameDiv {
+  padding: 5% 10%;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.main .left .note-names .names-scroll .noteNameDiv:hover {
+  background-color: #333333;
+}
+
 .main .left .sign-out {
   text-align: center;
   margin-top: auto;
@@ -75,5 +110,43 @@
 .main .right {
   width: 80%;
   height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.main .right .no-notes {
+  width: 100%;
+  height: 100%;
+  font-size: 4rem;
+  padding-top: 10%;
+}
+
+.main .right .no-notes p {
+  text-align: center;
+}
+
+.main .right .note {
+  width: 100%;
+  height: 100%;
+}
+
+.main .right .note .note-title {
+  width: 100%;
+  height: 10%;
+  font-size: 3rem;
+  padding: 1% 2%;
+  border: none;
+  outline: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.556);
+}
+
+.main .right .note .note-body {
+  resize: none;
+  width: 100%;
+  height: 88%;
+  padding: 1% 1% 2%;
+  border: none;
+  outline: none;
 }
 /*# sourceMappingURL=main.css.map */

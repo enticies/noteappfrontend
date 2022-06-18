@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import "../Assets/Styles/access.css";
 import { Link, useNavigate } from "react-router-dom";
-import Main from "./Main";
 
 export default function Login() {
     const [inputs, setInputs] = useState({});
@@ -14,7 +13,7 @@ export default function Login() {
         const user = localStorage.getItem('currentUser');
         const users = JSON.parse(localStorage.getItem('users'));
 
-        if (user && users.find(e => e.username = user)) {
+        if (user && users.find(e => e.username === user)) {
             navigate('/');
         }
     }, [])
@@ -48,7 +47,6 @@ export default function Login() {
             return;
         }
         localStorage.setItem("currentUser", inputs.username);
-        console.log("DSA");
         navigate('/');
     }
 

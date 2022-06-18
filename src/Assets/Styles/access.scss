@@ -1,4 +1,7 @@
-$base-color: #EB5160;
+$base-color: #1A1A1A;
+$secondary-color: #00A82D;
+
+
 
 * {
     margin: 0;
@@ -14,7 +17,7 @@ $base-color: #EB5160;
 
 body {
     width: 100%;
-    height: 100%;
+    height: 100vh;
 }
 
 .login, .signup {
