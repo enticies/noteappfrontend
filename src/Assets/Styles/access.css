@@ -10,6 +10,10 @@
   font-weight: bold;
 }
 
+.signup-text:hover, .login-text:hover {
+  color: #00A82D;
+}
+
 body {
   width: 100%;
   height: 100vh;
