@@ -4,8 +4,10 @@ import { nanoid } from 'nanoid';
 import '../Assets/Styles/main.css';
 
 export default function Main() {
+    const users = JSON.parse(localStorage.getItem('users'));
     const [currentUser, setCurrentUser] = useState(() => localStorage.getItem('currentUser'));
     const [userData, setUserData] = useState(() => JSON.parse(localStorage.getItem('users')).find((e) => e.username === currentUser));
+    console.log(users);
 
     const [notes, setNotes] = useState(userData.notes);
     const [currentNote, setCurrentNote] = useState((notes && notes[0]) || {});
@@ -26,7 +28,7 @@ export default function Main() {
 
     function createNewNote(e) {
         const newNote = {
-            noteTitle: "Untitled",
+            noteTitle: "",
             noteBody: "",
             noteID: nanoid()
         }
@@ -37,7 +39,7 @@ export default function Main() {
             ]
         })
         setCurrentNote(newNote);
-        setTitle("Untitled");
+        setTitle("");
         setBody("");
     }
 
@@ -63,6 +65,12 @@ export default function Main() {
         })
     }, [currentNote])
 
+    useEffect(() => {
+        const user = users.find(user => user.username === currentUser);
+        user.notes = notes;
+        localStorage.setItem('users', JSON.stringify(users.map(item =>  item.username === currentUser ? user : item )))
+    }, [notes])
+
     return (
         <main className="main">
             <div className="left">
@@ -71,7 +79,7 @@ export default function Main() {
                 <div className="note-names">
                     <p className="header"> Notes </p>
                     <div className="names-scroll">
-                        {notes && notes.map(e => <p onClick={handleClick} data-noteid={e.noteID} name={e.noteTitle} key={nanoid()} placeholder="Untitled" className="noteTitleDiv"> {e.noteTitle} </p>)}
+                        {notes && notes.map(e => <input type="button" placeholder="das" onClick={handleClick} data-noteid={e.noteID} name={e.noteTitle} key={nanoid()} className="noteTitleDiv" value={e.noteTitle || "Untitled"}></input>)}
                     </div>
                 </div>
                 <p className="sign-out" onClick={signOut}> Sign Out </p>
