@@ -53,6 +53,8 @@ export default function Main() {
         setCurrentNote(note);
         setTitle(note.noteTitle);
         setBody(note.noteBody);
+        const newNotes = [note, ...notes.filter(item => item.noteID !== note.noteID)]
+        setNotes(newNotes);
     }
     useEffect(() => {
         setCurrentNote(prevState => {
