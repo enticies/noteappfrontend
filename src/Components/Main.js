@@ -1,19 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom"
 import { nanoid } from 'nanoid';
+import debounce from 'lodash/debounce';
 import '../Assets/Styles/main.css';
 
 export default function Main() {
     const users = JSON.parse(localStorage.getItem('users'));
     const [currentUser, setCurrentUser] = useState(() => localStorage.getItem('currentUser'));
-    const [userData, setUserData] = useState(() => JSON.parse(localStorage.getItem('users')).find((e) => e.username === currentUser));
-    console.log(users);
-
+    const [userData, setUserData] = useState(JSON.parse(localStorage.getItem('users')).find((e) => e.username === currentUser));
     const [notes, setNotes] = useState(userData.notes);
     const [currentNote, setCurrentNote] = useState((notes && notes[0]) || {});
-    const [title, setTitle] = useState("");
-    const [body, setBody] = useState("");
+    const [title, setTitle] = useState((currentNote && currentNote.noteTitle) || "");
+    const [body, setBody] = useState((currentNote && currentNote.noteBody) || "");
     const navigate = useNavigate();
+
+    const debouncedSave = React.useCallback(
+        debounce((notes) => {
+            console.log('dsa', notes);
+            localStorage.setItem('users', JSON.stringify(users.map(item =>  item.username === currentUser ? {...item, notes} : item)))
+        }, 500), []);
 
     useEffect(() => {
         if (!userData || !currentUser) {
@@ -32,15 +37,15 @@ export default function Main() {
             noteBody: "",
             noteID: nanoid()
         }
+        setCurrentNote(newNote);
+        setTitle("");
+        setBody("");
         setNotes(prevState => {
             return [
                 newNote,
                 ...prevState,
             ]
         })
-        setCurrentNote(newNote);
-        setTitle("");
-        setBody("");
     }
 
     function handleClick(e) {
@@ -65,11 +70,7 @@ export default function Main() {
         })
     }, [currentNote])
 
-    useEffect(() => {
-        const user = users.find(user => user.username === currentUser);
-        user.notes = notes;
-        localStorage.setItem('users', JSON.stringify(users.map(item =>  item.username === currentUser ? user : item )))
-    }, [notes])
+    useEffect(() => debouncedSave(notes), [notes])
 
     return (
         <main className="main">
