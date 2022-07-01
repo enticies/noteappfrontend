@@ -7,7 +7,7 @@ import '../Assets/Styles/main.css';
 export default function Main() {
     const users = JSON.parse(localStorage.getItem('users'));
     const [currentUser, setCurrentUser] = useState(() => localStorage.getItem('currentUser'));
-    const [userData, setUserData] = useState(JSON.parse(localStorage.getItem('users')).find((e) => e.username === currentUser));
+    const [userData, setUserData] = useState(() => JSON.parse(localStorage.getItem('users')).find((e) => e.username === currentUser));
     const [notes, setNotes] = useState(userData.notes);
     const [currentNote, setCurrentNote] = useState((notes && notes[0]) || {});
     const [title, setTitle] = useState((currentNote && currentNote.noteTitle) || "");
@@ -16,9 +16,8 @@ export default function Main() {
 
     const debouncedSave = React.useCallback(
         debounce((notes) => {
-            console.log('dsa', notes);
             localStorage.setItem('users', JSON.stringify(users.map(item =>  item.username === currentUser ? {...item, notes} : item)))
-        }, 500), []);
+        }, 200), []);
 
     useEffect(() => {
         if (!userData || !currentUser) {
@@ -48,7 +47,7 @@ export default function Main() {
         })
     }
 
-    function handleClick(e) {
+    function handleNoteClick(e) {
         let note = notes.find(element => element.noteID === e.target.dataset.noteid);
         setCurrentNote(note);
         setTitle(note.noteTitle);
@@ -56,6 +55,14 @@ export default function Main() {
         const newNotes = [note, ...notes.filter(item => item.noteID !== note.noteID)]
         setNotes(newNotes);
     }
+
+    function handleDeleteClick(e) {
+        e.stopPropagation();
+        const noteId = e.target.previousSibling.dataset.noteid;
+        const newNotes = notes.filter(note => note.noteID != noteId);
+        setNotes(newNotes);
+    }
+
     useEffect(() => {
         setCurrentNote(prevState => {
             return {
@@ -73,7 +80,6 @@ export default function Main() {
     }, [currentNote])
 
     useEffect(() => debouncedSave(notes), [notes])
-
     return (
         <main className="main">
             <div className="left">
@@ -82,7 +88,11 @@ export default function Main() {
                 <div className="note-names">
                     <p className="header"> Notes </p>
                     <div className="names-scroll">
-                        {notes && notes.map(e => <input type="button" placeholder="das" onClick={handleClick} data-noteid={e.noteID} name={e.noteTitle} key={nanoid()} className="noteTitleDiv" value={e.noteTitle || "Untitled"}></input>)}
+                        {notes && notes.map(e => (
+                                                <div className="noteTitleDiv" onClick={handleNoteClick} key={nanoid()}> 
+                                                    <input className="title" type="button"  data-noteid={e.noteID} name={e.noteTitle} key={nanoid()} value={e.noteTitle || "Untitled"}></input> 
+                                                    <i onClick={handleDeleteClick} className="fa-solid fa-trash"></i>
+                                                </div>))} 
                     </div>
                 </div>
                 <p className="sign-out" onClick={signOut}> Sign Out </p>

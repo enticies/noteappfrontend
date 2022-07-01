@@ -65,18 +65,48 @@ $secondary-color: #00A82D;
                 align-self: center;
                 text-align: center;
                 overflow: scroll;
-                scrollbar-width: 1%;
 
                 .noteTitleDiv {
-                    font-size: 1.1rem;
-                    cursor: pointer;
-                    border: none;
-                    background-color: transparent;
+                    display: flex;
                     color: white;
                     width: 100%; 
-                    align-self: center;
                     margin: 5% 0%;
                     height: 5%;
+                    border: none;
+                    outline: none;
+                    position: relative;
+
+                    .title {
+                        border: none;
+                        outline: none;
+                        font-size: 1.1rem;
+                        cursor: pointer;
+                        width: 100%;
+                        background-color: transparent;
+                        color: white;
+                    }
+
+                    .fa-trash {
+                        position: absolute;
+                        height: max-content;
+                        width: max-content;
+                        border: none;
+                        outline: none;
+                        display: flex;
+                        color: white;
+                        right: 5%;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        font-size: 1rem;
+                        cursor: pointer;
+                        justify-content: center;
+                        align-items: center;
+
+                        &:hover {
+                            color: red;
+                        }
+                        
+                    }
 
                     &:hover {
                         background-color: #333333;
