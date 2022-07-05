@@ -61,7 +61,7 @@ export default function Main() {
         const noteId = e.target.previousSibling.dataset.noteid;
         const newNotes = notes.filter(note => note.noteID != noteId);
         setNotes(newNotes);
-        if (newNotes) {
+        if (newNotes.length > 0) {
             setCurrentNote(newNotes[0]);
             setTitle(newNotes[0].noteTitle);
             setBody(newNotes[0].noteBody);
