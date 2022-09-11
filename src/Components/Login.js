@@ -55,7 +55,7 @@ export default function Login() {
         <div className="login">
             <form onSubmit={handleSubmit}>
                 <input required type="text" name="username" placeholder="Username" value={inputs.username || ""} onChange={handleChange}></input>
-                <input required type="text" name="password" placeholder="Password" value={inputs.password || ""} onChange={handleChange}></input>
+                <input required type="password" name="password" placeholder="Password" value={inputs.password || ""} onChange={handleChange}></input>
                 <p className="error-output"> </p>
                 <button> Login </button>
                 <p className="question"> Don't have an account? <Link className="signup-text" to="/signup"> Sign Up </Link></p>
