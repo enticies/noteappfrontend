@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import '../Assets/Styles/access.css';
+import '../assets/styles/access.css';
 
 export default function Signup() {
     const [inputs, setInputs] = useState({});
@@ -29,6 +29,7 @@ export default function Signup() {
             return;
         }
 
+
         fetch(process.env.REACT_APP_API_URL + '/register', {
             method: "POST",
             headers: {
@@ -40,13 +41,12 @@ export default function Signup() {
         }),
         })
         .then((response) => {
-            if (response.ok) {
-                // do something
+            if (!response.ok) {
+                navigate('/login');
             }
             else {
                 errorOutput.textContent = genericErrorMessage;
             }
-            console.log(response);
         })
         .catch((error) => {
             errorOutput.textContent = genericErrorMessage;

@@ -1,9 +1,9 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Login from "./Login";
-import Signup from "./Signup";
-import Main from "./Main";
-import Error404 from "./Error404";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import Main from "./pages/Main";
+import Error404 from "./pages/Error404";
 import ProtectedRoutes from './ProtectedRoutes';
 
 function App() {
