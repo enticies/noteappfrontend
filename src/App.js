@@ -12,9 +12,9 @@ function App() {
       <div className="App">
         <Routes>
           <Route  element={<ProtectedRoutes />}>
-            <Route path="/" index exact element={<Main />} />
+            <Route path="/main" index exact element={<Main />} />
           </Route>
-          <Route path="/login" exact element={<Login />} />
+          <Route path="/" exact element={<Login />} />
           <Route path="/signup" exact element={<Signup />} />
           <Route path="*" exact element={<Error404 />} />
         </Routes>

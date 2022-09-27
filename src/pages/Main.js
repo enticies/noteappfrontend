@@ -15,6 +15,8 @@ export default function Main() {
     const [body, setBody] = useState(
         (currentNote && currentNote.noteBody) || ""
     );
+    const [ accessToken, setAccessToken ]= useState(null);
+
     const navigate = useNavigate();
 
     const debouncedSave = React.useCallback(
@@ -23,17 +25,33 @@ export default function Main() {
         []
     );
 
-    console.log('heheeeee');
-
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        const username = jwt(token).username;
-        setCurrentNote(username);
-    }, []);
+        setAccessToken(localStorage.getItem('accessToken'));
+        try {
+            setCurrentUser(jwt(accessToken).UserInfo.username);
+        }
+        catch(err) {
+            // request new token with a refresh token here 
+        }
 
-    function signOut() {
-        navigate("/login");
-    }
+           fetch(process.env.REACT_APP_API_URL + '/getusernotes', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + accessToken 
+            },
+            credentials: "include",
+        })
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                console.log(data);
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+            });
+    }, [])
 
     function createNewNote(e) {
         const newNote = {
@@ -75,6 +93,10 @@ export default function Main() {
         }
     }
 
+    const signOut = () => {
+
+    }
+
     useEffect(() => {
         setCurrentNote((prevState) => {
             return {
@@ -94,6 +116,11 @@ export default function Main() {
     }, [currentNote]);
 
     useEffect(() => debouncedSave(notes), [notes]);
+
+
+    useEffect(() => {
+        console.log(currentUser);
+    }, [currentUser])
     return (
         <main className="main">
             <div className="left">

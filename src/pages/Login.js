@@ -44,7 +44,7 @@ export default function Login() {
             })
             .then((data) => {
                 localStorage.setItem("accessToken", data.accessToken);
-                navigate("/");
+                navigate("/main");
             })
             .catch((error) => {
                 errorOutput.textContent = genericErrorMessage;

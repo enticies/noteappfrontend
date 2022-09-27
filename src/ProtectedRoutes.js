@@ -6,13 +6,8 @@ import jwt_decode from "jwt-decode";
 
 
 export default function ProtectedRoutes() {
-    useLocation();
-    let username = null;
     const token = localStorage.getItem("accessToken");
-    if (token) {
-        username = jwt_decode(token).username;
-    }
-    return username ? <Outlet /> : <Login />;
+    return token ? <Outlet /> : <Login />;
 }
 
 
