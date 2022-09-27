@@ -6,15 +6,6 @@ export default function Login() {
     const [inputs, setInputs] = useState({});
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const user = localStorage.getItem("currentUser");
-        const users = JSON.parse(localStorage.getItem("users"));
-
-        if (user && users.find((e) => e.username === user)) {
-            navigate("/");
-        }
-    }, []);
-
     const handleChange = (e) => {
         const name = e.target.name;
         const value = e.target.value;
@@ -31,7 +22,6 @@ export default function Login() {
         const errorOutput = document.getElementsByClassName("error-output")[0];
         const genericErrorMessage = "Something went wrong.";
         errorOutput.textContent = "";
-        console.log('dd');
 
         fetch(process.env.REACT_APP_API_URL + "/login", {
             method: "POST",
@@ -42,19 +32,18 @@ export default function Login() {
                 username: inputs.username,
                 password: inputs.password,
             }),
-            credentials: 'include'
+            credentials: "include",
         })
             .then((response) => {
                 console.log(response);
                 if (response.ok) {
                     return response.json();
-                } 
-                else {
+                } else {
                     errorOutput.textContent = genericErrorMessage;
                 }
             })
             .then((data) => {
-                localStorage.setItem("token", data.accessToken);
+                localStorage.setItem("accessToken", data.accessToken);
                 navigate("/");
             })
             .catch((error) => {
