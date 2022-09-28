@@ -71,7 +71,7 @@ $secondary-color: #00A82D;
                     color: white;
                     width: 100%; 
                     margin: 5% 0%;
-                    height: 5%;
+                    height: max-content;
                     border: none;
                     outline: none;
                     position: relative;
@@ -153,7 +153,8 @@ $secondary-color: #00A82D;
                 font-size: 3rem;
                 padding: 1% 2%;
                 border: none;
-                outline: none;
+                outline: none;  
+                height: max-content;
                 border-bottom: 1px solid rgba(0, 0, 0, 0.556);
             }
 
