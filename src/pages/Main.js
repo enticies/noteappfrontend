@@ -16,7 +16,6 @@ export default function Main() {
 
     useEffect(() => {
         setAccessToken(localStorage.getItem('accessToken'));
-        console.log('ffff');
     }, []);
 
     const debouncedSave = React.useCallback(
@@ -24,7 +23,6 @@ export default function Main() {
             if (!note || !accessToken) {
                 return;
             }
-            console.log('ddd');
             const body = {
                 id: note._id,
                 title: note.title,
@@ -72,8 +70,10 @@ export default function Main() {
                 })
                 .then((data) => {
                     setNotes(data);
-                    if (notes) {
+                    if (data[0]) {
                         setCurrentNote(data[0]);
+                        setTitle(data[0].title);
+                        setBody(data[0].body);
                     }
                 })
                 .catch((error) => {
@@ -97,18 +97,19 @@ export default function Main() {
             })
             .then((data) => {
                 setCurrentNote(data);
+                setTitle('');
+                setBody('');
+                setNotes((prevState) => {
+                    return [data, ...prevState];
+                });
             })
             .catch((error) => {
                 console.error('Error:', error);
             });
-        setTitle('');
-        setBody('');
-        setNotes((prevState) => {
-            return [currentNote, ...prevState];
-        });
     };
 
     const handleNoteClick = (e) => {
+        console.log(e.target);
         let note = notes.find((element) => element._id === e.target.dataset.id);
         setCurrentNote(note);
         setTitle(note.title);
@@ -121,7 +122,6 @@ export default function Main() {
         e.stopPropagation();
         e.preventDefault();
         const id = e.target.previousSibling.dataset.id;
-        console.log(id);
         fetch(process.env.REACT_APP_API_URL + '/deletenote', {
             method: 'DELETE',
             headers: {
@@ -130,27 +130,46 @@ export default function Main() {
             },
             credentials: 'include',
             body: JSON.stringify({
-                'id': id,
+                id: id,
             }),
         })
             .then((response) => {
                 console.log(response);
                 if (response.ok) {
-                    setNotes(notes.filter((note) => note._id != id));
+                    const newNotes = notes.filter((note) => note._id !== id);
+                    setNotes(newNotes);
+                    if (newNotes.length > 0) {
+                        setCurrentNote(newNotes[0]);
+                        setTitle(newNotes[0].title);
+                        setBody(newNotes[0].body);
+                    }
                 }
             })
             .catch((error) => {
                 console.error('Error:', error);
             });
-
-        if (notes.length > 0) {
-            setCurrentNote(notes[0]);
-            setTitle(notes[0].noteTitle);
-            setBody(notes[0].noteBody);
-        }
     };
 
-    const signOut = () => {};
+    const handleLogout = () => {
+        fetch(process.env.REACT_APP_API_URL + '/logout', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + accessToken,
+            },
+            credentials: 'include',
+        })
+            .then((response) => {
+                console.log(response);
+                if (response.ok) {
+                    localStorage.removeItem('accessToken');
+                    navigate('/');
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    };
 
     useEffect(() => {
         setCurrentNote((prevState) => {
@@ -161,12 +180,17 @@ export default function Main() {
             };
         });
     }, [title, body]);
-
     useEffect(() => {
-        debouncedSave(currentNote, accessToken);
-    }, [currentNote]);
-
-    useEffect(() => {
+        const note = notes.find((n) => n._id === currentNote._id);
+        console.log(note);
+        console.log(currentNote);
+        if (
+            note &&
+            currentNote &&
+            (note.title !== currentNote.title || note.body !== currentNote.body)
+        ) {
+            debouncedSave(currentNote, accessToken);
+        }
         setNotes((prevState) => {
             return prevState.map((element) =>
                 element._id === currentNote._id ? currentNote : element
@@ -189,7 +213,7 @@ export default function Main() {
                     <p className='header'> Notes </p>
                     <div className='names-scroll'>
                         {notes &&
-                            notes.map((e) => (
+                            notes.map((note) => (
                                 <div
                                     className='noteTitleDiv'
                                     onClick={handleNoteClick}
@@ -198,10 +222,10 @@ export default function Main() {
                                     <input
                                         className='title'
                                         type='button'
-                                        data-id={e._id}
-                                        name={e.title}
+                                        data-id={note._id}
+                                        name={note.title}
                                         key={nanoid()}
-                                        value={e.title || 'Untitled'}
+                                        value={note.title || 'Untitled'}
                                     ></input>
                                     <i
                                         onClick={handleDeleteClick}
@@ -211,7 +235,7 @@ export default function Main() {
                             ))}
                     </div>
                 </div>
-                <p className='sign-out' onClick={signOut}>
+                <p className='sign-out' onClick={handleLogout}>
                     {' '}
                     Sign Out{' '}
                 </p>
