@@ -4,6 +4,7 @@ import { nanoid } from 'nanoid';
 import debounce from 'lodash/debounce';
 import '../assets/styles/main.css';
 import jwt from 'jwt-decode';
+import axios from 'axios';
 
 export default function Main() {
     const [currentUser, setCurrentUser] = useState('');
@@ -13,6 +14,7 @@ export default function Main() {
     const [body, setBody] = useState((currentNote && currentNote.noteBody) || '');
     const navigate = useNavigate();
     const [accessToken, setAccessToken] = useState('');
+    axios.defaults.withCredentials = true;
 
     useEffect(() => {
         setAccessToken(localStorage.getItem('accessToken'));
@@ -82,34 +84,36 @@ export default function Main() {
         }
     }, [accessToken]);
 
+    // axios.defaults.withCredentials = true;
+
     const createNewNote = (e) => {
-        fetch(process.env.REACT_APP_API_URL + '/createnote', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: 'Bearer ' + accessToken,
-            },
-            credentials: 'include',
-        })
+        axios
+            .post(
+                process.env.REACT_APP_API_URL + '/createnote',
+                {},
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: 'Bearer ' + accessToken,
+                    },
+                }
+            )
             .then((response) => {
-                console.log(response);
-                return response.json();
-            })
-            .then((data) => {
-                setCurrentNote(data);
-                setTitle('');
-                setBody('');
-                setNotes((prevState) => {
-                    return [data, ...prevState];
-                });
+                if (response.status === 201) {
+                    setCurrentNote(response.data);
+                    setTitle('');
+                    setBody('');
+                    setNotes((prevState) => {
+                        return [response.data, ...prevState];
+                    });
+                }
             })
             .catch((error) => {
-                console.error('Error:', error);
+                console.log(error);
             });
     };
 
     const handleNoteClick = (e) => {
-        console.log(e.target);
         let note = notes.find((element) => element._id === e.target.dataset.id);
         setCurrentNote(note);
         setTitle(note.title);
@@ -151,23 +155,24 @@ export default function Main() {
     };
 
     const handleLogout = () => {
-        fetch(process.env.REACT_APP_API_URL + '/logout', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: 'Bearer ' + accessToken,
-            },
-            credentials: 'include',
-        })
+        axios.post(
+                process.env.REACT_APP_API_URL + '/logout',
+                {},
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: 'Bearer ' + accessToken,
+                    },
+                }
+            )
             .then((response) => {
-                console.log(response);
-                if (response.ok) {
+                if (response.status === 204) {
                     localStorage.removeItem('accessToken');
                     navigate('/');
                 }
             })
             .catch((error) => {
-                console.error('Error:', error);
+                console.log(error);
             });
     };
 
