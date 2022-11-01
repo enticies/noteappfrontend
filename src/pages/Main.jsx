@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { nanoid } from 'nanoid';
 import debounce from 'lodash/debounce';
 import '../assets/styles/main.css';
-import jwt from 'jwt-decode';
+import { isJwtExpired } from 'jwt-check-expiration';
 import axios from 'axios';
 
 export default function Main() {
@@ -14,68 +14,86 @@ export default function Main() {
     const [body, setBody] = useState((currentNote && currentNote.noteBody) || '');
     const navigate = useNavigate();
     const [accessToken, setAccessToken] = useState('');
-    axios.defaults.withCredentials = true;
+
+    const privateAxios = axios.create();
+    const refreshAxios = axios.create();
 
     useEffect(() => {
         setAccessToken(localStorage.getItem('accessToken'));
     }, []);
 
+    privateAxios.interceptors.request.use(async (req) => {
+        const isExpired = isJwtExpired(accessToken);
+        if (!isExpired) {
+            return req;
+        }
+        const newToken = await getNewAccessToken();
+        setAccessToken(newToken);
+        localStorage.setItem('accessToken', newToken);
+        req.headers.Authorization = `Bearer ${newToken}`;
+        return req;
+    });
+
+    const getNewAccessToken = async () => {
+        const accessTokenObj = await refreshAxios
+            .get(process.env.REACT_APP_API_URL + '/refreshtoken', {
+                withCredentials: true,
+            })
+            .then((response) => {
+                return response.data;
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+        if (!accessTokenObj) {
+            handleLogout();
+        } else {
+            return accessTokenObj.accessToken;
+        }
+    };
     const debouncedSave = React.useCallback(
         debounce((note, accessToken) => {
             if (!note || !accessToken) {
                 return;
             }
-            const body = {
+            const body = JSON.stringify({
                 id: note._id,
                 title: note.title,
                 body: note.body,
-            };
-            fetch(process.env.REACT_APP_API_URL + '/updatenote', {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: 'Bearer ' + accessToken,
-                },
-                credentials: 'include',
-                body: JSON.stringify(body),
-            })
+            });
+            privateAxios
+                .put(process.env.REACT_APP_API_URL + '/updatenote', body, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: 'Bearer ' + accessToken,
+                    },
+                })
                 .then((response) => {
                     console.log(response);
                 })
                 .catch((error) => {
-                    console.error('Error:', error);
+                    console.log(error);
                 });
         }, 500),
         []
     );
 
     useEffect(() => {
-        try {
-            setCurrentUser(jwt(accessToken).UserInfo.username);
-        } catch (err) {
-            // request new token with a refresh token here
-        }
-    }, [accessToken]);
-
-    useEffect(() => {
         if (accessToken) {
-            fetch(process.env.REACT_APP_API_URL + '/getusernotes', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: 'Bearer ' + accessToken,
-                },
-                credentials: 'include',
-            })
-                .then((response) => {
-                    return response.json();
+            privateAxios
+                .get(process.env.REACT_APP_API_URL + '/getusernotes', {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: 'Bearer ' + accessToken,
+                    },
+                    withCredentials: true,
                 })
-                .then((data) => {
-                    setNotes(data);
-                    if (data[0]) {
-                        setCurrentNote(data[0]);
-                        setTitle(data[0].title);
-                        setBody(data[0].body);
+                .then((response) => {
+                    setNotes(response.data);
+                    if (response.data[0]) {
+                        setCurrentNote(response.data[0]);
+                        setTitle(response.data[0].title);
+                        setBody(response.data[0].body);
                     }
                 })
                 .catch((error) => {
@@ -84,10 +102,8 @@ export default function Main() {
         }
     }, [accessToken]);
 
-    // axios.defaults.withCredentials = true;
-
     const createNewNote = (e) => {
-        axios
+        privateAxios
             .post(
                 process.env.REACT_APP_API_URL + '/createnote',
                 {},
@@ -126,20 +142,18 @@ export default function Main() {
         e.stopPropagation();
         e.preventDefault();
         const id = e.target.previousSibling.dataset.id;
-        fetch(process.env.REACT_APP_API_URL + '/deletenote', {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: 'Bearer ' + accessToken,
-            },
-            credentials: 'include',
-            body: JSON.stringify({
-                id: id,
-            }),
-        })
+        privateAxios
+            .delete(process.env.REACT_APP_API_URL + '/deletenote', {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: 'Bearer ' + accessToken,
+                },
+                data: {
+                    id: id,
+                },
+            })
             .then((response) => {
-                console.log(response);
-                if (response.ok) {
+                if (response.status === 204) {
                     const newNotes = notes.filter((note) => note._id !== id);
                     setNotes(newNotes);
                     if (newNotes.length > 0) {
@@ -150,12 +164,13 @@ export default function Main() {
                 }
             })
             .catch((error) => {
-                console.error('Error:', error);
+                console.log(error);
             });
     };
 
-    const handleLogout = () => {
-        axios.post(
+    const handleLogout = async () => {
+        await privateAxios
+            .post(
                 process.env.REACT_APP_API_URL + '/logout',
                 {},
                 {
@@ -165,15 +180,11 @@ export default function Main() {
                     },
                 }
             )
-            .then((response) => {
-                if (response.status === 204) {
-                    localStorage.removeItem('accessToken');
-                    navigate('/');
-                }
-            })
             .catch((error) => {
                 console.log(error);
             });
+        localStorage.removeItem('accessToken');
+        navigate('/');
     };
 
     useEffect(() => {
@@ -187,8 +198,6 @@ export default function Main() {
     }, [title, body]);
     useEffect(() => {
         const note = notes.find((n) => n._id === currentNote._id);
-        console.log(note);
-        console.log(currentNote);
         if (
             note &&
             currentNote &&
